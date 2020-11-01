@@ -1,0 +1,25 @@
+node {
+    try{
+    stage('testing') {
+        checkout scm
+        def imageForTesting = docker.build("meow", "-f server/Dockerfile .")
+    imageForTesting.inside {
+            sh 'cd server/ && pytest'
+        }
+    }
+    } catch (error) {
+        currentBuild.result = 'FAILURE'
+        emailext(
+          subject: "${JOB_NAME} ; Build:${currentBuild.currentResult} ; ${BUILD_NUMBER}",
+          body: "\
+          <div style='text-align:center;background-color: #c1ddff;padding: 10px'>\
+        <h1 style='text-align:center;color: #cecee0;background-color:#ff5050;\
+        border-color:#ff5252'>${currentBuild.currentResult}</h1>\
+        <b>Project</b>: ${currentBuild.fullProjectName}<br>\
+        <b>Description</b>: ${currentBuild.description}<br>\
+        <b>Job url</b>: ${BUILD_URL}<br>\
+        <b>Error</b>: ${error}<br></div>",
+          recipientProviders: [developers(), upstreamDevelopers(),brokenBuildSuspects(), brokenTestsSuspects(), requestor()]
+        )
+}
+}

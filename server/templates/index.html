@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MeowFacts</title>
+    <!-- Bulma styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link rel="stylesheet" href="../static/meow.css">
+    <link rel="icon" href="../static/kitten_face.png" />
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-6 is-offset-3">
+                <div id="facts"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    const meowFactsWs = new WebSocket(
+        'ws://' + window.location.host + '/ws/meowfacts/'
+    )
+
+    const addFact = (fact) => {
+        const facts_elem = document.querySelector('#facts')
+        facts_elem.classList.add('pre-animation');
+
+        setTimeout(function () {
+            facts_elem.innerHTML = `
+        <div class="fact-container">
+          <div class="fact-container_header"></div>
+          <div class="fact-container_body">${fact}</div>
+        </div>
+      `
+        }, 500)
+
+        setTimeout(function () {
+            facts_elem.classList.remove('pre-animation')
+        }, 500)
+    }
+
+    meowFactsWs.onmessage = (event_) => {
+        const fact = event_.data
+        addFact(fact)
+    }
+
+    meowFactsWs.onclose = (event_) => {
+        console.error('Meow facts socket closed')
+    }
+</script>
+</body>
+</html>
