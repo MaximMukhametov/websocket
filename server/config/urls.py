@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 
 urlpatterns = [
-    path('meow/', include('apps.meow.urls')),
+    path('', include('apps.table.urls')),
 ]
 
 if settings.DEBUG:

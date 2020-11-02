@@ -17,6 +17,23 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 # Templates, middleware settings
 ##################################################################
 
+
+##################################################################
+# Database
+##################################################################
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': 'postgres',
+        'PORT': '5432',
+    }
+}
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -78,20 +95,6 @@ if DEBUG:
     MIDDLEWARE = [
                      'debug_toolbar.middleware.DebugToolbarMiddleware', ] + MIDDLEWARE
     INSTALLED_APPS += ['debug_toolbar', ]
-
-##################################################################
-# Celery settings
-##################################################################
-
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", 'redis://redis:6379/0')
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", 'redis://redis:6379/0')
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_BEAT_SCHEDULE = {
-    "get_random_fact": {"task": "apps.meow.tasks.get_random_fact",
-                        "schedule": 5.0}
-}
 
 ##################################################################
 # Channels settings

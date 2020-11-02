@@ -27,3 +27,8 @@ pytest-flake8==1.0.6
 
 django-fsm
 gunicorn==20.0.4
+
+psycopg2-binary
+
+django-cors-headers==3.3.0
+djangorestframework==3.11.0

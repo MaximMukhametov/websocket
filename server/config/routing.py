@@ -1,5 +1,5 @@
 from channels.routing import ProtocolTypeRouter, URLRouter
-from apps.meow.routing import websocket_urlpatterns
+from apps.table.routing import websocket_urlpatterns
 
 # Channels routers only work on the scope level, not on the level of individual
 # events, which means you can only have one consumer for any given connection.

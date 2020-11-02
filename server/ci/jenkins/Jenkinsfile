@@ -2,7 +2,7 @@ node {
     try{
     stage('testing') {
         checkout scm
-        def imageForTesting = docker.build("meow", "-f server/Dockerfile .")
+        def imageForTesting = docker.build("table", "-f server/Dockerfile .")
     imageForTesting.inside {
             sh 'cd server/ && pytest'
         }

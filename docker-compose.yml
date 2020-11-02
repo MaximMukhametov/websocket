@@ -20,9 +20,9 @@ services:
   # ################################################################################
     daphne_asgi:
         <<: *server_base
-        command: daphne -b 0.0.0.0 -p 8001 config.asgi:application
+        command: daphne -b 0.0.0.0 -p 8000 config.asgi:application
         depends_on:
-            - redis
+            - gunicorn
 
   # ################################################################################
   # Django Backend / API / Gunicorn WSGI
@@ -31,47 +31,15 @@ services:
         <<: *server_base
         command: gunicorn config.wsgi -c ./config/gunicorn.py --access-logfile '-'
         depends_on:
-            - daphne_asgi
-
-  # ################################################################################
-  # Celery scheduler
-  # ################################################################################
-    celery_beat:
-        <<: *server_base
-        command: celery beat --app config.celery:app -l info
-        depends_on:
             - redis
-            - daphne_asgi
-            - celery
-
-  # ################################################################################
-  # Celery worker running async tasks
-  # ################################################################################
-    celery:
-        <<: *server_base
-        command: celery worker --app config.celery:app --loglevel=info --logfile=logs/celery.log
-        depends_on:
-            - redis
-            - daphne_asgi
 
   # ################################################################################
   # Queue broker for Celery
   # ################################################################################
     redis:
         image: redis:6.0.6-alpine
-
-  # ################################################################################
-  # Workers health monitoring
-  # ################################################################################
-    dashboard:
-        <<: *server_base
-        command:  flower -A config.celery:app --port=5555 --broker=redis://redis:6379/0
-        ports:
-            - 5555:5555
         depends_on:
-            - daphne_asgi
-            - redis
-            - celery
+            - postgres
 
   # ################################################################################
   # Nginx
@@ -80,7 +48,14 @@ services:
         build:
             context: ./
             dockerfile: ./nginx/Dockerfile
-        depends_on:
-            - daphne_asgi
         ports:
             - 80:80
+        depends_on:
+            - daphne_asgi
+
+  # ################################################################################
+  # Postgres
+  # ################################################################################
+    postgres:
+        image: postgres:11.2
+

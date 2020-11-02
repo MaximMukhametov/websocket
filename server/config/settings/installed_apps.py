@@ -7,7 +7,7 @@ INSTALLED_APPS = [
 ]
 
 LOCAL_APPS = [
-    'apps.meow',
+    'apps.table',
 ]
 
 INSTALLED_APPS += LOCAL_APPS
