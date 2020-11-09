@@ -23,6 +23,10 @@ services:
         command: daphne -b 0.0.0.0 -p 8000 config.asgi:application
         depends_on:
             - gunicorn
+        ulimits:
+            nofile:
+                soft: 65536
+                hard: 65536
 
   # ################################################################################
   # Django Backend / API / Gunicorn WSGI
@@ -52,6 +56,10 @@ services:
             - 80:80
         depends_on:
             - daphne_asgi
+        ulimits:
+            nofile:
+                soft: 65536
+                hard: 65536
 
   # ################################################################################
   # Postgres

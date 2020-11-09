@@ -14,7 +14,7 @@ class Table(models.Model):
 	def enable(self):
 		channel_layer = get_channel_layer()
 		async_to_sync(channel_layer.group_send)(
-			"status_socket", {"type": "status_socket.update",
+			"222", {"type": "status_socket_update",
 			                  "status": "enable",
 			                  "table_id": self.id,
 			                  }
@@ -24,7 +24,7 @@ class Table(models.Model):
 	def disable(self):
 		channel_layer = get_channel_layer()
 		async_to_sync(channel_layer.group_send)(
-			"status_socket", {"type": "status_socket.update",
+			"333", {"type": "status_socket_update",
 			                  "status": "disable",
 			                  "table_id": self.id,
 			                  }
